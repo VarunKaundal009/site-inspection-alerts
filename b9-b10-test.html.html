@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>City inspection alerts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --concrete: #D9DDDF;
+    --panel: #FFFFFF;
+    --ink: #1D2A33;
+    --ink-soft: #4A5862;
+    --hivis: #FFD400;
+    --rule: #B9C0C4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--concrete);
+    color: var(--ink);
+    font: 400 1.0625rem/1.5 "Barlow", system-ui, sans-serif;
+  }
+  .tape {
+    height: 22px;
+    background: repeating-linear-gradient(-45deg, var(--hivis) 0 18px, var(--ink) 18px 36px);
+  }
+  main { max-width: 30rem; margin: 0 auto; padding: 1.75rem 1.25rem 3rem; }
+  h1 {
+    font: 700 2.5rem/1.02 "Barlow Condensed", sans-serif;
+    margin: 0 0 .75rem;
+  }
+  .lede { margin: 0 0 2rem; color: var(--ink-soft); }
+  ol { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  li {
+    counter-increment: step;
+    background: var(--panel);
+    border-left: 6px solid var(--ink);
+    padding: 1.25rem 1.25rem 1.4rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+  li h2 {
+    font: 600 1.5rem/1.15 "Barlow Condensed", sans-serif;
+    margin: 0 0 .35rem;
+  }
+  li h2::before { content: counter(step) ". "; }
+  li p { margin: 0 0 1rem; color: var(--ink-soft); }
+  .btn {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font: 600 1.125rem/1 "Barlow", sans-serif;
+    padding: 1.05rem 1rem;
+    margin-top: .6rem;
+    border: 2px solid var(--ink);
+    color: var(--ink);
+    background: var(--panel);
+    min-height: 3.25rem;
+  }
+  .btn.primary { background: var(--hivis); }
+  .btn:focus-visible, button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  li p.how { margin: 0; color: var(--ink); line-height: 1.7; }
+  .channel + .channel { margin-top: 1rem; }
+  .bldg { display: block; font: 700 1.25rem/1 "Barlow Condensed", sans-serif; margin-bottom: .4rem; }
+  .code-row { display: flex; gap: .5rem; align-items: stretch; }
+  code {
+    flex: 1;
+    font: 600 1.05rem/1.3 "Barlow", sans-serif;
+    background: var(--concrete);
+    padding: .7rem .75rem;
+    word-break: break-all;
+  }
+  button {
+    min-width: 5.5rem;
+    font: 600 1rem "Barlow", sans-serif;
+    border: 2px solid var(--ink);
+    background: var(--hivis);
+    color: var(--ink);
+    padding: 0 1rem;
+  }
+</style>
+</head>
+<body>
+<div class="tape" aria-hidden="true"></div>
+<main>
+  <h1>City inspection alerts</h1>
+  <p class="lede">Get a notification on your phone when a city inspection date or time changes in your building.</p>
+
+  <ol>
+    <li>
+      <h2>Install the ntfy app</h2>
+      <p>It's free. Skip this step if ntfy is already on your phone.</p>
+      <a class="btn" id="ios" href="https://apps.apple.com/app/id1625396347">Get ntfy on the App Store</a>
+      <a class="btn" id="android" href="https://play.google.com/store/apps/details?id=io.heckel.ntfy">Get ntfy on Google Play</a>
+    </li>
+    <li>
+      <h2>Copy your building's channel</h2>
+      <p>Work in both buildings? Add both channels, one at a time.</p>
+      <div class="channel">
+        <span class="bldg">B9</span>
+        <div class="code-row">
+          <code data-topic="b9-city-insp-8f98d1">b9-city-insp-8f98d1</code>
+          <button type="button" class="copy">Copy</button>
+        </div>
+      </div>
+      <div class="channel">
+        <span class="bldg">B10</span>
+        <div class="code-row">
+          <code data-topic="b10-city-insp-5a558d">b10-city-insp-5a558d</code>
+          <button type="button" class="copy">Copy</button>
+        </div>
+      </div>
+    </li>
+    <li>
+      <h2>Add the channel in ntfy</h2>
+      <p class="how">Open the ntfy app and tap +.<br>
+        Paste the channel name and tap Subscribe.<br>
+        Allow notifications when your phone asks.</p>
+    </li>
+  </ol>
+</main>
+
+<script>
+  // Show the matching store button first on the visitor's phone
+  const ua = navigator.userAgent;
+  const ios = document.getElementById("ios");
+  const android = document.getElementById("android");
+  if (/Android/i.test(ua)) {
+    ios.parentNode.insertBefore(android, ios);
+    android.classList.add("primary");
+  } else if (/iPhone|iPad|iPod/i.test(ua)) {
+    ios.classList.add("primary");
+  }
+
+  // Channel names live in the data-topic attributes above
+  document.querySelectorAll(".channel").forEach((row) => {
+    const topic = row.querySelector("code").dataset.topic;
+    const btn = row.querySelector(".copy");
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(topic);
+        btn.textContent = "Copied";
+      } catch (e) {
+        btn.textContent = "Select text";
+      }
+      setTimeout(() => (btn.textContent = "Copy"), 2000);
+    });
+  });
+</script>
+</body>
+</html>
