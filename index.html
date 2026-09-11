@@ -61,8 +61,7 @@
   }
   .btn.primary { background: var(--hivis); }
   .btn:focus-visible, button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
-  .fallback { margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
-  .fallback p { margin-bottom: .5rem; font-size: .95rem; }
+  li p.how { margin: 0; color: var(--ink); line-height: 1.7; }
   .code-row { display: flex; gap: .5rem; align-items: stretch; }
   code {
     flex: 1;
@@ -72,9 +71,10 @@
     word-break: break-all;
   }
   button {
+    min-width: 5.5rem;
     font: 600 1rem "Barlow", sans-serif;
     border: 2px solid var(--ink);
-    background: var(--panel);
+    background: var(--hivis);
     color: var(--ink);
     padding: 0 1rem;
   }
@@ -94,17 +94,18 @@
       <a class="btn" id="android" href="https://play.google.com/store/apps/details?id=io.heckel.ntfy">Get ntfy on Google Play</a>
     </li>
     <li>
-      <h2>Turn on B10 alerts</h2>
-      <p>Opens ntfy and adds the B10 inspection channel. Tap Subscribe if asked, then allow notifications.</p>
-      <a class="btn primary" id="subscribe" href="ntfy://ntfy.sh/plaid-b10-insp-7k3q9x">Open in ntfy</a>
-
-      <div class="fallback">
-        <p>If the button doesn't open ntfy, open the app, tap +, and enter this channel name:</p>
-        <div class="code-row">
-          <code id="topic">plaid-b10-insp-7k3q9x</code>
-          <button type="button" id="copy">Copy</button>
-        </div>
+      <h2>Copy the B10 channel name</h2>
+      <p>You'll paste this into ntfy in the next step.</p>
+      <div class="code-row">
+        <code id="topic">plaid-b10-insp-7k3q9x</code>
+        <button type="button" id="copy">Copy</button>
       </div>
+    </li>
+    <li>
+      <h2>Add the channel in ntfy</h2>
+      <p class="how">Open the ntfy app and tap +.<br>
+        Paste the channel name and tap Subscribe.<br>
+        Allow notifications when your phone asks.</p>
     </li>
   </ol>
 </main>
@@ -113,7 +114,6 @@
   // ---- Change the topic here only ----
   const TOPIC = "plaid-b10-insp-7k3q9x";
   // ------------------------------------
-  document.getElementById("subscribe").href = "ntfy://ntfy.sh/" + TOPIC;
   document.getElementById("topic").textContent = TOPIC;
 
   // Show the matching store button first on the visitor's phone
